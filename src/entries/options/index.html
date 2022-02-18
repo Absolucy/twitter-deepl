@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Options</title>
+	</head>
+	<body>
+		<form id="form">
+			<label for="api-key">DeepL API Key (required!)</label>
+			<input type="text" id="api-key" name="api-key"><br>
+			<hr>
+			<label for="target-language">Translate Into</label>
+			<select id="target-language" name="target-language">
+				<option value="EN-US" selected>English (American)</option>
+				<option value="EN-GB">English (British)</option>
+				<option value="BG">Bulgarian</option>
+				<option value="CS">Czech</option>
+				<option value="DA">Danish</option>
+				<option value="DE">German</option>
+				<option value="EL">Greek</option>
+				<option value="ES">Spanish</option>
+				<option value="ET">Estonian</option>
+				<option value="FI">Finnish</option>
+				<option value="FR">French</option>
+				<option value="HU">Hungarian</option>
+				<option value="IT">Italian</option>
+				<option value="JA">Japanese</option>
+				<option value="LT">Lithuanian</option>
+				<option value="LV">Latvian</option>
+				<option value="NL">Dutch</option>
+				<option value="PL">Polish</option>
+				<option value="PT-PT">Portuguese</option>
+				<option value="PT-BR">Portuguese (Brazillian)</option>
+				<option value="RO">Romanian</option>
+				<option value="RU">Russian</option>
+				<option value="SK">Slovak</option>
+				<option value="SL">Slovenian</option>
+				<option value="SV">Swedish</option>
+				<option value="ZH">Chinese</option>
+			</select>
+			<br>
+			<label for="split-sentences">Split Sentences</label>
+			<input type="checkbox" id="split-sentences" name="split-sentences" checked/>
+			<br>
+			<label for="preserve-formatting">Preserve Formatting</label>
+			<input type="checkbox" id="preserve-formatting" name="preserve-formatting" />
+			<br>
+			<label for="formality">Formality</label>
+			<select id="formality" name="formality">
+				<option value="default" selected>Default</option>
+				<option value="more">More Formal</option>
+				<option value="less">Less Formal</option>
+			</select>
+		</form>
+		<script type="module" src="./options.ts"></script>
+	</body>
+</html>
