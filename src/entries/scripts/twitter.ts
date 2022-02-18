@@ -1,6 +1,7 @@
 import { get_element } from "./get_element";
-import { TWEET, TRANSLATE_TWEET } from "./selectors";
+import { TWEET, TWEET_INNER, TRANSLATE_TWEET } from "./selectors";
 import { get } from "./storage";
+import { mode, is_hashtag } from "./utils";
 
 const LANGUAGE_NAMES = {
 	"EN-US": "English (United States)",
@@ -36,7 +37,6 @@ async function add_deepl() {
 		timeout: 1500,
 	})) as HTMLElement;
 	if (!tweet) {
-		console.log("no tweets found");
 		return;
 	}
 	handle_translation(tweet);
@@ -50,16 +50,29 @@ async function handle_translation(tweet: HTMLElement) {
 		context: tweet,
 	})) as HTMLElement;
 	if (translate_button == null) {
-		console.log("no translate button found");
 		return;
 	}
-	let new_translate_button = create_new_translate_button(translate_button);
+	let tweet_content = (await get_element(TWEET_INNER, {
+		name: "inner",
+		timeout: 500,
+		context: tweet,
+	})) as HTMLElement;
+	if (!tweet_content) {
+		return;
+	}
+	let new_translate_button = create_new_translate_button(
+		translate_button,
+		tweet_content
+	);
 	translate_button.parentElement.after(new_translate_button);
 	// Remove the old translate button.
 	translate_button.parentElement.remove();
 }
 
-function create_new_translate_button(copycat: HTMLElement): HTMLElement {
+function create_new_translate_button(
+	copycat: HTMLElement,
+	tweet_content: HTMLElement
+): HTMLElement {
 	let copycat_parent = copycat.parentElement;
 	// Recreate as close to the original as possible
 	let div = document.createElement("div");
@@ -75,13 +88,9 @@ function create_new_translate_button(copycat: HTMLElement): HTMLElement {
 	span.innerText = "Translate with DeepL";
 	div.appendChild(span);
 
-	// Get a reference to the original tweet
-	let tweet_reference = copycat.parentElement.previousElementSibling
-		.firstChild as HTMLElement;
-
 	// Set up click handler
 	div.onclick = () => {
-		deepl_translate(tweet_reference, span);
+		deepl_translate(tweet_content, span);
 	};
 	// Set up hover handler
 	div.onmouseover = () => {
@@ -94,9 +103,13 @@ function create_new_translate_button(copycat: HTMLElement): HTMLElement {
 	return div;
 }
 
-interface DeepLResponse {
+interface DeepLTranslation {
 	text: string;
 	detected_source_language: string;
+}
+
+interface DeepLResponse {
+	translations: DeepLTranslation[];
 }
 
 async function deepl_translate(tweet: HTMLElement, span: HTMLElement) {
@@ -104,7 +117,15 @@ async function deepl_translate(tweet: HTMLElement, span: HTMLElement) {
 	let api_key: string = (await get("api_key")) || "";
 	let form_data = new FormData();
 	form_data.append("auth_key", api_key);
-	form_data.append("text", tweet.innerText);
+	let children = Array();
+	for (let i = 0; i < tweet.children.length; i++) {
+		let child = tweet.children[i] as HTMLElement;
+		if (child.tagName !== "SPAN") continue;
+		if (child.innerText.trim() === "") continue;
+		if ((await is_hashtag(child)) !== null) continue;
+		form_data.append("text", child.innerText);
+		children.push(child);
+	}
 	form_data.append("target_lang", target_language);
 	const DEEPL_URL = api_key.endsWith(":fx")
 		? "https://api-free.deepl.com/v2/translate"
@@ -116,6 +137,7 @@ async function deepl_translate(tweet: HTMLElement, span: HTMLElement) {
 			body: form_data,
 		});
 		let json = await play_fetch.json();
+		console.log(json);
 		if (play_fetch.status !== 200) {
 			switch (play_fetch.status) {
 				case 403:
@@ -154,10 +176,23 @@ async function deepl_translate(tweet: HTMLElement, span: HTMLElement) {
 			return;
 		}
 		response = json;
-		tweet.innerText = response.text;
 	} catch (error) {
 		on_error(error, span);
 		return;
+	}
+
+	if (response.translations.length !== children.length) {
+		on_error(
+			`Unexpected number of translations: ${response.translations.length}, expected ${children.length}`,
+			span
+		);
+		return;
+	}
+
+	for (let i = 0; i < children.length; i++) {
+		let span = children[i];
+		let translation = response.translations[i];
+		span.innerText = translation.text;
 	}
 
 	span.parentElement.onclick = null;
@@ -165,7 +200,14 @@ async function deepl_translate(tweet: HTMLElement, span: HTMLElement) {
 	span.parentElement.onmouseout = null;
 	span.style.textDecoration = "none";
 
-	let src_lang_name = LANGUAGE_NAMES[response.detected_source_language];
+	let src_lang_name =
+		LANGUAGE_NAMES[
+			mode(
+				response.translations.map(
+					translation => translation.detected_source_language
+				)
+			)
+		] ?? "Unknown";
 	let target_lang_name = LANGUAGE_NAMES[target_language];
 	span.innerText = `Translated from ${src_lang_name} into ${target_lang_name} by DeepL`;
 }
@@ -187,10 +229,6 @@ function on_error(
 	span.style.color = "#ff0033";
 }
 
-window.addEventListener("load", () => {
-	(async () => {
-		console.log("running");
-		await add_deepl();
-		console.log("done");
-	})();
-});
+(async () => {
+	await add_deepl();
+})();
