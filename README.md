@@ -1,48 +1,33 @@
 # twitter-deepl
 
-This template should help get you started developing a vanilla web extension in Vite.
+This is a simple extension that replaces Google translation on Twitter with DeepL translation.
 
-## Usage Notes
-Switch between Manifest V2 and Manifest V3 builds using the MANIFEST_VERSION environment variable in `.env`
+[This requires a DeepL API key, which is *free* for up to 500k characters a month](https://www.deepl.com/pro-checkout/account?productId=1200&yearly=false&trial=false).
 
-Hot-Reload during development is currently not supported in Manifest V3. Use watch mode for development.
+## License
 
-Refer to [@samrum/vite-plugin-web-extension](https://github.com/samrum/vite-plugin-web-extension) for more usage notes.
+This code reuses the [`getElement` function](https://github.com/insin/tweak-new-twitter/blob/master/tweak-new-twitter.user.js#L838-L894) from the "[Tweak New Twitter](https://github.com/insin/tweak-new-twitter)" extension, which is licensed under the [MIT license](https://github.com/insin/tweak-new-twitter/blob/master/LICENSE).
 
-## Customize configuration
+This extension, however, is under the [Zlib license](LICENSE.md), which is provided below:
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+### Zlib license
 
-## Project Setup
+Copyright (c) 2022 Lucy <lucy@absolucy.moe>
 
-```sh
-npm install
-```
+This software is provided 'as-is', without any express or implied warranty. In
+no event will the authors be held liable for any damages arising from the use of
+this software.
 
-### Compile and Hot-Reload for Development
+Permission is granted to anyone to use this software for any purpose, including
+commercial applications, and to alter it and redistribute it freely, subject to
+the following restrictions:
 
-```sh
-npm run dev
-```
+1.  The origin of this software must not be misrepresented; you must not claim
+    that you wrote the original software. If you use this software in a product,
+    an acknowledgment in the product documentation would be appreciated but is
+    not required.
 
-### Compile and Watch for Development (When Hot-Reload is not available)
+2.  Altered source versions must be plainly marked as such, and must not be
+    misrepresented as being the original software.
 
-```sh
-npm run watch
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Load complited extension in browser
-
-```sh
-npm run serve:chrome
-```
-
-```sh
-npm run serve:firefox
-```
+3.  This notice may not be removed or altered from any source distribution.
