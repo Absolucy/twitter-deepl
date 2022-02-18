@@ -137,7 +137,6 @@ async function deepl_translate(tweet: HTMLElement, span: HTMLElement) {
 			body: form_data,
 		});
 		let json = await play_fetch.json();
-		console.log(json);
 		if (play_fetch.status !== 200) {
 			switch (play_fetch.status) {
 				case 403:

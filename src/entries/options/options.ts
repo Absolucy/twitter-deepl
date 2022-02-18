@@ -45,7 +45,6 @@ function assert_string(string: any, default_value: string = ""): string {
 }
 
 function save_options() {
-	console.log("Saving!");
 	// Let's do some basic sanity checks
 	let target_language_form: HTMLSelectElement =
 		document.querySelector("#target-language");
@@ -76,7 +75,6 @@ function save_options() {
 }
 
 async function restore_options() {
-	console.log("Loading!");
 	let api_key_form: HTMLInputElement = document.querySelector("#api-key");
 	let target_language_form: HTMLSelectElement =
 		document.querySelector("#target-language");
