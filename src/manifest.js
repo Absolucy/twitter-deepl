@@ -5,7 +5,16 @@ const sharedManifest = {
 			matches: ["*://*.twitter.com/*", "*://twitter.com/*"],
 		},
 	],
-	icons: {},
+	icons: {
+		16: "icons/icon.svg",
+		48: "icons/icon.svg",
+		64: "icons/icon.svg",
+		96: "icons/icon.svg",
+		128: "icons/icon.svg",
+		256: "icons/icon.svg",
+		512: "icons/icon.svg",
+		1024: "icons/icon.svg",
+	},
 	options_ui: {
 		chrome_style: false,
 		page: "src/entries/options/index.html",
@@ -13,7 +22,9 @@ const sharedManifest = {
 	permissions: ["storage"],
 };
 
-const browserAction = {};
+const browserAction = {
+	default_icon: "icons/icon.svg",
+};
 
 export const ManifestV2 = {
 	...sharedManifest,
