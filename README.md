@@ -4,6 +4,19 @@ This is a simple extension that replaces Google translation on Twitter with Deep
 
 [This requires a DeepL API key, which is *free* for up to 500k characters a month](https://www.deepl.com/pro-checkout/account?productId=1200&yearly=false&trial=false).
 
+## Building
+
+Building it simple:
+```shell
+$ pnpm run build
+```
+This will output to the `dist` directory.
+
+If you wish to build a Manifest V3 file, you can do this:
+```shell
+$ env MANIFEST_VERSION=3 pnpm run build
+```
+
 ## License
 
 This code reuses the [`getElement` function](https://github.com/insin/tweak-new-twitter/blob/master/tweak-new-twitter.user.js#L838-L894) from the "[Tweak New Twitter](https://github.com/insin/tweak-new-twitter)" extension, which is licensed under the [MIT license](https://github.com/insin/tweak-new-twitter/blob/master/LICENSE).
