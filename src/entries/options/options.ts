@@ -65,6 +65,11 @@ function save_options() {
 		"#preserve-formatting"
 	);
 	let api_key_form: HTMLInputElement = document.querySelector("#api-key");
+	let sync_enabled_form: HTMLInputElement =
+		document.querySelector("#sync-enabled");
+	browser.storage.local.set({
+		sync: sync_enabled_form.checked,
+	});
 	set({
 		api_key: assert_string(api_key_form.value),
 		target_language,
@@ -84,6 +89,8 @@ async function restore_options() {
 		"#preserve-formatting"
 	);
 	let formality_form: HTMLSelectElement = document.querySelector("#formality");
+	let sync_enabled_form: HTMLInputElement =
+		document.querySelector("#sync-enabled");
 	api_key_form.value = assert_string(await get("api_key"));
 	target_language_form.value = assert_string_to_list(
 		await get("target_language"),
@@ -98,10 +105,13 @@ async function restore_options() {
 		SUPPORTED_FORMALITIES,
 		"default"
 	);
+	sync_enabled_form.checked =
+		(await browser.storage.local.get("sync"))["sync"] ?? false;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
 	document.querySelector("#form").addEventListener("change", () => {
+		console.log("saving options");
 		save_options();
 	});
 	restore_options();
