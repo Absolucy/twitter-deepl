@@ -19,7 +19,11 @@ const sharedManifest = {
 		chrome_style: false,
 		page: "src/entries/options/index.html",
 	},
-	permissions: ["storage"],
+	permissions: [
+		"storage",
+		"https://api-free.deepl.com/v2/translate",
+		"https://api.deepl.com/v2/translate",
+	],
 };
 
 const browserAction = {

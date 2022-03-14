@@ -136,6 +136,7 @@ async function deepl_translate(tweet: HTMLElement, span: HTMLElement) {
 			method: "POST",
 			body: form_data,
 		});
+		console.log(play_fetch);
 		let json = await play_fetch.json();
 		if (play_fetch.status !== 200) {
 			switch (play_fetch.status) {
@@ -217,7 +218,14 @@ function on_error(
 	button_message: string = "Error while translating with DeepL"
 ) {
 	// Log to console
-	console.error(`Errored while translating with DeepL: ${error}`);
+	if (typeof error === "string") {
+		console.error(`Errored while translating with DeepL: ${error}`);
+	} else {
+		console.error(
+			`Errored while translating with DeepL: ${error}`,
+			error.stack
+		);
+	}
 	// Clean up button stuff
 	span.parentElement.onclick = null;
 	span.parentElement.onmouseover = null;
