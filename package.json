@@ -1,6 +1,6 @@
 {
 	"name": "twitter-deepl",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"displayName": "Twitter-DeepL",
 	"author": "Lucy <lucy@absolucy.moe>",
 	"description": "Use DeepL translation on twitter!",
